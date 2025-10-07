@@ -10,11 +10,44 @@ const agent = new https.Agent({
   rejectUnauthorized: false
 });
 
+// Cities endpoint
 app.get('/cities', async (req, res) => {
   try {
     const response = await axios.get('https://fest.nl/api/v1/cities', {
       params: { search: req.query.search },
       headers: { 'Authorization': 'Bearer sk-mijn-gpt-abc123' },
+      httpsAgent: agent
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});  // <-- Deze sluit cities
+
+// Events endpoint
+app.get('/events', async (req, res) => {
+  try {
+    const response = await axios.get('https://fest.nl/api/v1/events', {
+      params: req.query,
+      headers: { 
+        'Authorization': 'Bearer sk-mijn-gpt-abc123' 
+      },
+      httpsAgent: agent
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Genres endpoint
+app.get('/genres/search', async (req, res) => {
+  try {
+    const response = await axios.get('https://fest.nl/api/v1/genres/search', {
+      params: req.query,
+      headers: { 
+        'Authorization': 'Bearer sk-mijn-gpt-abc123' 
+      },
       httpsAgent: agent
     });
     res.json(response.data);
